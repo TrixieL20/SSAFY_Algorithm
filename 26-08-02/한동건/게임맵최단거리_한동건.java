@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class 게임맵최단거리_한동건 {
+class Solution {
       // 동서남북
     int[] dx = {0,0,1,-1};
     int[] dy = {1,-1,0,0};
@@ -18,7 +18,6 @@ public class 게임맵최단거리_한동건 {
     
     
     public int solution(int[][] maps) {
-        int answer = 0;
         int col = maps[0].length;
         int row = maps.length;
         
