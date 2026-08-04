@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Worng {
+class Solution {
     static List<List<String>> paths = new ArrayList<>();
     static Map<String, Map<String, List<Integer>>> ticketMap = new HashMap<>();
     static int k;
