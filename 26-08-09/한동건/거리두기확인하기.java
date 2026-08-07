@@ -9,10 +9,8 @@ class Solution {
     static final int CASE_N = 5;
 
     public boolean is_in_range(int x, int y) {
-        if (x >= 0 && y >= 0 && x < ROOM_SIZE && y < ROOM_SIZE)
-            return true;
-        else
-            return false;
+        return (x >= 0 && y >= 0 && x < ROOM_SIZE && y < ROOM_SIZE);
+       
     }
 
     public boolean is_ok(int x, int y, char[][] places) {
