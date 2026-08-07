@@ -83,6 +83,7 @@ class Solution {
         }
 
         for (int k = 0; k < CASE_N; k++) {
+            // break를 이중for문에서 하니까 불필요하게 i가 계속 돌아서 checkRoom함수를 따로 만들어서 구현함
             // for (int i = 0; i < ROOM_SIZE; i++) {
             //     for (int j = 0; j < ROOM_SIZE; j++) {
             //         if (rooms[k][i][j] == 'P') {
