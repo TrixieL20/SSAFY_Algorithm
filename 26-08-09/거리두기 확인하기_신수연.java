@@ -18,6 +18,8 @@ class Solution {
         while(!q.isEmpty()) {
             int[] curr = q.poll();
            
+            // 맨해튼 거리가 2인데 q에 적재 됐다는 건 이미 거리두기를 준수했다는 것
+            // 따라서 탐색 X
             if(curr[2] == 2) continue;
             
             for(int i = 0; i < moveX.length; i++) {
@@ -26,11 +28,14 @@ class Solution {
                 
                 if(nextX < 0 || nextY < 0 || nextX >= n || nextY >= n) continue;
                 
+                // 이미 방문했거나 파티션이면 이동하지 않음
                 if(visited[nextX][nextY]) continue;
                 if(place[nextX].charAt(nextY) == 'X') continue;
                 
+                // 거리 2 이내에 다른 사람이 있으면 거리두기 실패 => false 리턴
                 if(place[nextX].charAt(nextY) == 'P') return false;
                 
+                // 이외의 경우 탐색 필요 => q에 추가
                 q.offer(new int[] {nextX, nextY, curr[2] + 1});
                 visited[nextX][nextY] = true;
             }
