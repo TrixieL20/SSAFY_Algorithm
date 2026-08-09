@@ -8,6 +8,7 @@ class Solution {
     static final int ROOM_SIZE = 5;
     static final int CASE_N = 5;
 
+
     public boolean is_in_range(int x, int y) {
         return (x >= 0 && y >= 0 && x < ROOM_SIZE && y < ROOM_SIZE);
        
@@ -78,6 +79,8 @@ class Solution {
             for (int j = 0; j < ROOM_SIZE; j++) {
                 // String을 Char배열로 변환
                 char[] charArray = places[i][j].toCharArray();
+
+                // rooms[i][j]에 char배열을 복사
                 rooms[i][j] = charArray.clone();
             }
         }

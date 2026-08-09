@@ -17,14 +17,21 @@ class test {
 				ary[i][0] = d;
 				ary[i][1] = t;
 			}
+
+			// 마감시간순으로 정렬
 			Arrays.sort(ary, (a, b) -> a[1] - b[1]);
 
+			// 최대로 쉴 수 있는 시간 변수
 			int max_start_time = Integer.MAX_VALUE;
 
+			// 지금까지 수행한 task들의 시간
 			int task_times = 0;
+
+
 			for (int i = 0; i < ary.length; i++) {
 				task_times += ary[i][0];
 
+				// 마감시간 - 지금까지 수행한 task들의 시간 중 가장 작은 값 으로 갱신 
 				if (ary[i][1] - task_times < max_start_time) {
 					max_start_time = ary[i][1] - task_times;
 				}
