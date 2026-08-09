@@ -33,16 +33,15 @@ class Solution
 				infos.add(info);
 			}
 			
-			Collections.sort(infos, (a, b)-> b[1] - a[1]);
+			Collections.sort(infos, (a, b)-> b[1] - a[1]); //마감일 기준 내림차순 정렬
 			
-			day = infos.get(0)[1] - infos.get(0)[0];
+			day = infos.get(0)[1] - infos.get(0)[0]; //제일 마감일이 늦은 과제의 최대 시작일 전날 == 다음으로 마감일이 늦은 과제를 마감해야 하는 날
 			for(int i = 1; i < infos.size(); i++)
 			{
 				info = infos.get(i);
-				startDay = info[1] - info[0] + 1;
-				if(startDay < day - info[0] + 1)
+				if(info[1] < day) // '현재 과제의 마감일'과 '앞 과제의 시작일 전날' 중에 더 빠른 날 찾기
 				{
-					day = startDay - 1;
+					day = info[1] - info[0];
 				}
 				else
 				{
