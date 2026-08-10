@@ -1,1 +1,25 @@
-gh pr create --title "26/99/99 홍길동 문제 풀이" --body ""
+name: Set PR Title
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  set-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set PR title
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          DATE=$(echo "$BRANCH_NAME" | cut -d'_' -f1)
+          NAME=$(echo "$BRANCH_NAME" | cut -d'_' -f2)
+
+          gh pr edit "$PR_NUMBER" \
+            --title "$DATE $NAME 문제 풀이"
