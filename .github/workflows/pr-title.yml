@@ -1,13 +1,29 @@
-name: Test PR Workflow
+name: Set PR Title
 
 on:
   pull_request:
     types: [opened]
 
+permissions:
+  pull-requests: write
+
 jobs:
-  test:
+  set-title:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test
-        run: echo "PR WORKFLOW IS RUNNING"
+      - name: Set PR title
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH_NAME: ${{ github.head_ref }}
+        run: |
+          DATE="${BRANCH_NAME%%_*}"
+          NAME="${BRANCH_NAME#*_}"
+
+          TITLE="$DATE $NAME 문제 풀이"
+
+          echo "Branch: $BRANCH_NAME"
+          echo "Title: $TITLE"
+
+          gh pr edit "$PR_NUMBER" --title "$TITLE"
