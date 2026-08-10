@@ -18,7 +18,7 @@ class Solution {
                 task[i][1] = sc.nextInt();
             }
 
-            // 오름차순 정렬
+            // 내림차순 정렬
             Arrays.sort(task, (a, b) -> b[1] - a[1]);
 
             // 데드라인이 가장 먼 날짜부터 시작
