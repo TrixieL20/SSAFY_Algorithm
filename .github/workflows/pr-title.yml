@@ -2,7 +2,7 @@ name: Set PR Title
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write
