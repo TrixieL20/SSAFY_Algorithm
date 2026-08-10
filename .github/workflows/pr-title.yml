@@ -2,7 +2,7 @@ name: Set PR Title
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened]
 
 permissions:
   pull-requests: write
@@ -19,11 +19,40 @@ jobs:
           BRANCH_NAME: ${{ github.head_ref }}
         run: |
           DATE="${BRANCH_NAME%%_*}"
-          NAME="${BRANCH_NAME#*_}"
+          INITIAL="${BRANCH_NAME#*_}"
+
+          case "$INITIAL" in
+            CIY)
+              NAME="최인영"
+              ;;
+            PSH)
+              NAME="박소현"
+              ;;
+            HYJ)
+              NAME="황윤주"
+              ;;
+            HDG)
+              NAME="한동건"
+              ;;
+            LMJ)
+              NAME="이민정"
+              ;;
+            SSY)
+              NAME="신수연"
+              ;;
+            *)
+              NAME="$INITIAL"
+              ;;
+          esac
 
           TITLE="$DATE $NAME 문제 풀이"
 
           echo "Branch: $BRANCH_NAME"
+          echo "Date: $DATE"
+          echo "Initial: $INITIAL"
+          echo "Name: $NAME"
           echo "Title: $TITLE"
 
-          gh pr edit "$PR_NUMBER" --title "$TITLE"
+          gh pr edit "$PR_NUMBER" \
+            --repo "${{ github.repository }}" \
+            --title "$TITLE"
