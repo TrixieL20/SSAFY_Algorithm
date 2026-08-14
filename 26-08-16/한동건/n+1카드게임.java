@@ -43,10 +43,12 @@ class Solution {
                         coin--;
                     }
                     
-                    // 코인 부족하면 코인 원상복구
+                    // 코인 부족하면 코인,카드 원상복구
                     if(coin < 0){
                         
                         coin = current_coin;
+                        pulledCards.add(Integer.valueOf(val1));
+                        pulledCards.add(Integer.valueOf(val1));
                         // 한 쌍이 N이 되는 카드 찾기 for문 재개
                         continue;
                     }
