@@ -13,27 +13,19 @@ class Solution
 		{
             int n = sc.nextInt();
             
-            switch(n) {
-                case 0:
-                    System.out.println(1);
-                    break;
-                case 1:
-                    System.out.println(0);
-                    break;
-                case 2:
-                    System.out.println(8);
-                    break;
-                default:
-                    String answer = "";
-                    if (n % 2 == 1) {
-                       	answer += "4";
-                    }
-                    
-                    for (int i = 0; i < n / 2; i++) {
-                        answer += "8";
-                    }
-                    
-                    System.out.println(answer);
+            if (n == 1)
+                System.out.println(0);
+            else {
+                String answer = "";
+                if (n % 2 == 1) {
+                    answer += "4";
+                }
+                
+                for (int i = 0; i < n / 2; i++) {
+                    answer += "8";
+                }
+                
+                System.out.println(answer);
             }
         }
 	}
