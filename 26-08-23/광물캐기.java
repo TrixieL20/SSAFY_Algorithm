@@ -55,6 +55,7 @@ class Solution {
     return total;
   }
 
+  // 광물 점수 (정렬하기위해 숫자화)
   public int mineralScore(String mineral) {
 
     if (mineral.equals("diamond")) {
@@ -75,6 +76,7 @@ class Solution {
     // 광물 인덱스
     int mineralsIdx = 0;
 
+    // 전체 곡괭이 내구도 계산
     for (int i = 0; i < picks.length; i++) {
       for (int j = 0; j < picks[i]; j++) {
         totalDurability += 5;
@@ -114,6 +116,7 @@ class Solution {
     // 곡괭이 인덱스
     int pickIdx = 0;
     
+    // 광물 그룹 순회 (오름차순으로 그룹이 정렬돼있기 때문에 피로도가 큰 그룹부터 순회)
     for (int i = 0; i < diggableMinerals.size(); i++) {
       while (picks[pickIdx] == 0)
         pickIdx++;
