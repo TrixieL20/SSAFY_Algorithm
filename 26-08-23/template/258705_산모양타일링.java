@@ -9,7 +9,7 @@ class Solution {
                 lowerMountain[i] = (lowerMountain[i - 2] + lowerMountain[i - 1] * 2) % 10007;
             }
             else {
-                lowerMountain[i] = (lowerMountain[i - 2] + lowerMountain[i - 1])% 10007;
+                lowerMountain[i] = (lowerMountain[i - 2] + lowerMountain[i - 1]) % 10007;
             }
         }
 
