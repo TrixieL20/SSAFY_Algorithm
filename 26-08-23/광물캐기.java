@@ -102,7 +102,7 @@ class Solution {
 
     }
 
-    // 피로도 큰 그룹 순으로 오름차순
+    // 피로도 큰 그룹 순으로 내림차순
     diggableMinerals.sort((a, b) -> {
       int sumA = 0, sumB = 0;
       for (int x : a)
@@ -116,7 +116,7 @@ class Solution {
     // 곡괭이 인덱스
     int pickIdx = 0;
     
-    // 광물 그룹 순회 (오름차순으로 그룹이 정렬돼있기 때문에 피로도가 큰 그룹부터 순회)
+    // 광물 그룹 순회 (내림차순으로 그룹이 정렬돼있기 때문에 피로도가 큰 그룹부터 순회)
     for (int i = 0; i < diggableMinerals.size(); i++) {
       while (picks[pickIdx] == 0)
         pickIdx++;
