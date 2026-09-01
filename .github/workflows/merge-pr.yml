@@ -1,0 +1,54 @@
+name: Merge PRs by Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: 
+  pull-requests: write
+  contents: write
+
+jobs:
+  batch-merge:
+    # PR에 달린 댓글이면서, 댓글 내용이 '/리뷰완료'로 시작하는 경우에만 실행
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/리뷰완료')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract target keyword and merge matching PRs
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          # 1. 댓글이 달린 현재 PR의 제목 가져오기
+          CURRENT_PR_NUMBER="${{github.event.issue.number}}"
+          CURRENT_TITLE=$(gh pr view "$CURRENT_PR_NUMBER" --json title --jq '.title')
+          echo "Current PR Title: $CURRENT_TITLE"
+
+          # 2. 제목에서 공통 분류 키워드 추출 (예: '26/08/16 OOO 문제 풀이' -> '26/08/16'
+          PREFIX=$(echo "$CURRENT_TITLE" | grep -oE '^[0-9]{2}/[0-9]{2}/[0-9]{2}' | head -n 1)
+  
+          if [ -z "$PREFIX" ]; then
+            echo "Error: 제목 접두사를 찾을 수 없습니다."
+            exit 1
+          fi
+
+          echo "Target Prefix: $PREFIX"
+
+          # 3. 열려 있는(open) PR 목록을 조회하여 해다 접두사가 포함된 PR 번호 추출
+          MATCHING_PRS=$(gh pr list --state open --json number,title --jq ".[] | select(.title | contains(\"$PREFIX\")) | .number")
+
+          if [ -z "$MATCHING_PRS" ]; then
+            echo "머지할 대상 PR이 없습니다."
+            exit 0
+          fi
+
+          #4. 일치하는 PR 순차 머지 및 브랜치 삭제
+          for PR in $MATCHING_PRS; do
+            echo "Processing PR #$PR..."
+            # 머지 및 브랜치 삭제 수행
+            gh pr merge "$PR" --squash --delete-branch --admin || echo "PR #$PR 머지 실패 (충돌 또는 권한 문제)"
+          done
+    
