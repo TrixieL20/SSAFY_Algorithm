@@ -3,9 +3,7 @@ import java.util.*;
 class Solution {
     public int solution(int n, int k, int[] enemy) {
         int answer = enemy.length;
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> { // 0 index, 1 value
-            return a[1] - b[1];
-        });
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> a - b);
         
         if(k >= enemy.length)
         {
@@ -16,7 +14,7 @@ class Solution {
         do {
             while(pq.size() <= k && idx < enemy.length)
             {
-                pq.offer(new int[]{idx, enemy[idx]});
+                pq.offer(enemy[idx]);
                 idx++;
             }
             
@@ -25,8 +23,8 @@ class Solution {
                 return answer;
             }
             
-            int[] node = pq.poll();
-            n -= node[1];
+            int node = pq.poll();
+            n -= node;
             
             if(n < 0)
             {
