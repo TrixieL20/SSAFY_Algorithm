@@ -4,7 +4,6 @@ import java.util.StringTokenizer;
 
 class Solution {
     static int[][] ingredients = null;
-    static boolean[] isInclude = null;
     static int n = 0, l = 0, answer = 0;
 
     public static void main(String args[]) throws Exception {
