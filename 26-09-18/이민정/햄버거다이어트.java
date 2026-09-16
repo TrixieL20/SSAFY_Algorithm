@@ -19,7 +19,6 @@ class Solution {
             n = Integer.parseInt(st.nextToken());
             l = Integer.parseInt(st.nextToken());
 
-            isInclude = new boolean[n];
             ingredients = new int[n][2];
 
             for (int i = 0; i < n; i++) {
