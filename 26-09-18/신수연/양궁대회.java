@@ -71,11 +71,6 @@ class Solution {
 
     // 낮은 점수를 더 많이 맞힌 배열이 우선
     private boolean isBetter(int[] ryan, int[] answer) {
-
-        if (answer[0] == -1) {
-            return true;
-        }
-
         for (int i = 10; i >= 0; i--) {
             if (ryan[i] > answer[i]) {
                 return true;
