@@ -50,7 +50,6 @@ class Solution {
 				{
 					isVisited[num][cnt - 1] = true;
 					swapNumbers(nums,  cnt - 1);
-					isVisited[num][cnt - 1] = true;
 				}
 				swap(nums, i, j);
 			}
