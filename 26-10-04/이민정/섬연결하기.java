@@ -6,11 +6,9 @@ class Solution {
         else return parent[a] = find(parent[a]);
     }
 
-    public void union(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if(a != b) {
-            parent[b] = a;
+    public void union(int parent1, int parent2) {
+        if(parent1 != parent2) {
+            parent[parent2] = parent1;
         }
     }
 
@@ -26,8 +24,11 @@ class Solution {
 
         //Kruskal Algorithm
         for(int i = 0; i < costs.length; i++) {
-            if(find(costs[i][0]) != find(costs[i][1])) {
-                union(costs[i][0], costs[i][1]);
+            int parent1 = find(costs[i][0]);
+            int parent2 = find(costs[i][1]);
+
+            if(parent1 != parent2) {
+                union(parent1, parent2);
                 answer += costs[i][2];
             }
         }
