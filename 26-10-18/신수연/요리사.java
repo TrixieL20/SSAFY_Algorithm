@@ -1,69 +1,69 @@
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
-public class Solution {
-    static int n;
-    static int[][] synergy;
-    static boolean[] selected;
-    static int answer;
+class Solution
+{
+	static int n;
+	static int[][] materials;
+	static boolean[] selected;
+	static int min;
+	
+	
+	public static void dfs(int depth, int start) {
+		if(depth == n / 2) {
+			int tasteA = 0;
+			int tasteB = 0;
+			
+			for(int i = 0; i < n; i++) {
+				for(int j = 0; j < n; j++) {
+					if(selected[i] && selected[j]) {
+						tasteA += materials[i][j];
+					} else if(!selected[i] && !selected[j]) {
+						tasteB += materials[i][j];
+					}
+				}
+			}
+			
+			min = Math.min(min, Math.abs(tasteA - tasteB));
+		}
+		
+		for(int i = start; i < n; i++) {
+			selected[i] = true;
 
-    static void dfs(int start, int depth) {
-        if (depth == n / 2) {
-            int tasteA = 0;
-            int tasteB = 0;
-
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (selected[i] && selected[j]) {
-                        tasteA += synergy[i][j];
-                    } else if (!selected[i] && !selected[j]) {
-                        tasteB += synergy[i][j];
-                    }
-                }
-            }
-
-            answer = Math.min(answer, Math.abs(tasteA - tasteB));
-            return;
-        }
-
-        for (int i = start; i < n; i++) {
-            selected[i] = true;
-            dfs(i + 1, depth + 1);
-            selected[i] = false;
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(System.in)
-        );
-
-        StringBuilder sb = new StringBuilder();
-        int T = Integer.parseInt(br.readLine().trim());
-
-        for (int tc = 1; tc <= T; tc++) {
-            n = Integer.parseInt(br.readLine().trim());
-
-            synergy = new int[n][n];
-            selected = new boolean[n];
-            answer = Integer.MAX_VALUE;
-
-            for (int i = 0; i < n; i++) {
-                StringTokenizer st =
-                        new StringTokenizer(br.readLine());
-
-                for (int j = 0; j < n; j++) {
-                    synergy[i][j] = Integer.parseInt(st.nextToken());
-                }
-            }
-
-            dfs(0, 0);
-
-            sb.append("#").append(tc).append(" ")
-                    .append(answer).append("\n");
-        }
-
-        System.out.print(sb);
-    }
+            // 재료 조합
+			dfs(depth + 1, i + 1);
+			
+			selected[i] = false;
+		}
+	}
+	
+	public static void main(String args[]) throws Exception
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		
+		int T = Integer.parseInt(br.readLine());
+		
+		for(int test_case = 1; test_case <= T; test_case++)
+		{
+			n = Integer.parseInt(br.readLine());
+			materials = new int[n][n];
+			selected = new boolean[n];
+			min = Integer.MAX_VALUE;
+			
+			for(int i = 0; i < n; i++) {
+				String[] input = br.readLine().split(" ");
+				
+				for(int j = 0; j < n; j++) {
+					materials[i][j] = Integer.parseInt(input[j]);
+				}
+			}
+			
+			dfs(0, 0);
+			
+			sb.append("#" + test_case + " " + min + "\n");
+		}
+		System.out.println(sb);
+	}
 }
