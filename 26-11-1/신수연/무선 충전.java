@@ -1,116 +1,126 @@
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 class BC {
-    int x, y, c, p;
-    public BC(int x, int y, int c, int p) {
-        this.x = x;
-        this.y = y;
-        this.c = c;
-        this.p = p;
-    }
+	int x;
+	int y;
+	int c;
+	int p;
+
+	public BC(int x, int y, int c, int p) {
+		this.x = x;
+		this.y = y;
+		this.c = c;
+		this.p = p;
+	}
 }
 
 public class Solution {
-    // 이동 없음, 상(1), 우(2), 하(3), 좌(4)
-    static int[] dx = {0, 0, 1, 0, -1};
-    static int[] dy = {0, -1, 0, 1, 0};
+	static int m;
+	static int a;
+	static int[] userA;
+	static int[] userB;
+	static BC[] bc;
 
-    static int M, A;
-    static int[] moveA, moveB;
-    static BC[] bcs;
+	static final int[] mx = { 0, 0, 1, 0, -1 };
+	static final int[] my = { 0, -1, 0, 1, 0 };
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine().trim());
+	static boolean[] reachA;
+	static boolean[] reachB;
 
-        for (int t = 1; t <= T; t++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            M = Integer.parseInt(st.nextToken());
-            A = Integer.parseInt(st.nextToken());
+	public static int bfs() {
+		int ax = 1, ay = 1;
+		int bx = 10, by = 10;
+		int total = 0;
 
-            moveA = new int[M + 1];
-            moveB = new int[M + 1];
+		for (int i = 0; i <= m; i++) {
+			if (i > 0) {
+				ax += mx[userA[i - 1]];
+				ay += my[userA[i - 1]];
+				bx += mx[userB[i - 1]];
+				by += my[userB[i - 1]];
+			}
 
-            st = new StringTokenizer(br.readLine());
-            for (int i = 1; i <= M; i++) {
-                moveA[i] = Integer.parseInt(st.nextToken());
-            }
+			checkIsReach(ax, ay, bx, by);
 
-            st = new StringTokenizer(br.readLine());
-            for (int i = 1; i <= M; i++) {
-                moveB[i] = Integer.parseInt(st.nextToken());
-            }
+			int maxCurr = 0;
 
-            bcs = new BC[A];
-            for (int i = 0; i < A; i++) {
-                st = new StringTokenizer(br.readLine());
-                int x = Integer.parseInt(st.nextToken());
-                int y = Integer.parseInt(st.nextToken());
-                int c = Integer.parseInt(st.nextToken());
-                int p = Integer.parseInt(st.nextToken());
-                bcs[i] = new BC(x, y, c, p);
-            }
+			for (int j = 0; j < a; j++) {
+				for (int k = 0; k < a; k++) {
+					int sumA = 0;
+					int sumB = 0;
 
-            int totalSum = simulate();
-            System.out.println("#" + t + " " + totalSum);
-        }
-    }
+					if (reachA[j])
+						sumA = bc[j].p;
+					if (reachB[k])
+						sumB = bc[k].p;
 
-    static int simulate() {
-        // 사용자 A 초기 위치: (1, 1), 사용자 B 초기 위치: (10, 10)
-        int ax = 1, ay = 1;
-        int bx = 10, by = 10;
-        int totalCharge = 0;
+					if (j == k && reachA[j] && reachB[k]) {
+						sumA /= 2;
+						sumB /= 2;
+					}
 
-        // 0초부터 M초까지 반복
-        for (int time = 0; time <= M; time++) {
-            // 1. 이동 방향에 따라 좌표 갱신 (0초에는 이동하지 않음)
-            if (time > 0) {
-                ax += dx[moveA[time]];
-                ay += dy[moveA[time]];
-                bx += dx[moveB[time]];
-                by += dy[moveB[time]];
-            }
+					maxCurr = Math.max(maxCurr, sumA + sumB);
+				}
+			}
+			
+			total += maxCurr;
+		}
 
-            // 2. 현재 위치에서 각 BC에 접속 가능한지 확인하여 리스트에 성능과 함께 기록
-            boolean[] reachA = new boolean[A];
-            boolean[] reachB = new boolean[A];
+		return total;
+	}
 
-            for (int i = 0; i < A; i++) {
-                if (Math.abs(bcs[i].x - ax) + Math.abs(bcs[i].y - ay) <= bcs[i].c) {
-                    reachA[i] = true;
-                }
-                if (Math.abs(bcs[i].x - bx) + Math.abs(bcs[i].y - by) <= bcs[i].c) {
-                    reachB[i] = true;
-                }
-            }
+	public static void checkIsReach(int x1, int y1, int x2, int y2) {
+		reachA = new boolean[a];
+		reachB = new boolean[a];
 
-            // 3. 이번 초에 얻을 수 있는 최대 충전량 계산 (완전탐색)
-            int maxCurrentCharge = 0;
+		for (int i = 0; i < a; i++) {
+			if (Math.abs(x1 - bc[i].x) + Math.abs(y1 - bc[i].y) <= bc[i].c) {
+				reachA[i] = true;
+			}
 
-            for (int i = 0; i < A; i++) {
-                for (int j = 0; j < A; j++) {
-                    int sumA = 0;
-                    int sumB = 0;
+			if (Math.abs(x2 - bc[i].x) + Math.abs(y2 - bc[i].y) <= bc[i].c) {
+				reachB[i] = true;
+			}
+		}
+	}
 
-                    if (reachA[i]) sumA = bcs[i].p;
-                    if (reachB[j]) sumB = bcs[j].p;
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-                    // 만약 두 사람이 같은 BC에 접속했다면 성능을 반으로 나눔
-                    if (i == j && reachA[i] && reachB[j]) {
-                        sumA /= 2;
-                        sumB /= 2;
-                    }
+		int T = Integer.parseInt(br.readLine());
 
-                    maxCurrentCharge = Math.max(maxCurrentCharge, sumA + sumB);
-                }
-            }
+		for (int test_case = 1; test_case <= T; test_case++) {
+			String[] input = br.readLine().split(" ");
+			m = Integer.parseInt(input[0]);
+			a = Integer.parseInt(input[1]);
 
-            totalCharge += maxCurrentCharge;
-        }
+			input = br.readLine().split(" ");
+			userA = new int[m];
+			for (int i = 0; i < input.length; i++) {
+				userA[i] = Integer.parseInt(input[i]);
+			}
 
-        return totalCharge;
-    }
+			input = br.readLine().split(" ");
+			userB = new int[m];
+			for (int i = 0; i < input.length; i++) {
+				userB[i] = Integer.parseInt(input[i]);
+			}
+
+			bc = new BC[a];
+
+			for (int i = 0; i < a; i++) {
+				input = br.readLine().split(" ");
+				bc[i] = new BC(Integer.parseInt(input[0]), Integer.parseInt(input[1]), Integer.parseInt(input[2]),
+						Integer.parseInt(input[3]));
+			}
+
+			int answer = bfs();
+
+			sb.append("#" + test_case + " " + answer + "\n");
+		}
+		System.out.println(sb);
+	}
 }
