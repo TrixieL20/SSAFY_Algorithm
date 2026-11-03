@@ -35,6 +35,7 @@ public class Solution {
 		int total = 0;
 
 		for (int i = 0; i <= m; i++) {
+			// 0초에는 이동하지 않음
 			if (i > 0) {
 				ax += mx[userA[i - 1]];
 				ay += my[userA[i - 1]];
@@ -42,6 +43,7 @@ public class Solution {
 				by += my[userB[i - 1]];
 			}
 
+			// 충전 범위 체크
 			checkIsReach(ax, ay, bx, by);
 
 			int maxCurr = 0;
@@ -56,6 +58,7 @@ public class Solution {
 					if (reachB[k])
 						sumB = bc[k].p;
 
+					// 같은 충전소면 전력 반으로 나누기
 					if (j == k && reachA[j] && reachB[k]) {
 						sumA /= 2;
 						sumB /= 2;
