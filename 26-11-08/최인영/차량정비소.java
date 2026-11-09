@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -27,8 +25,6 @@ class Solution
   private static int[] repairTime;
   // 손님 리스트
   private static List<Customer> customers;
-  // 지갑 두고 간 손님과 같은 창구 이용한 손님 idx 저장
-  private static List<Integer> targets;
 
   static class Customer {
     int idx;
@@ -37,19 +33,20 @@ class Solution
     int visitTime;
     int repairTime;
 
-    Customer(int visitTime){
+    Customer(int idx, int visitTime){
+      this.idx = idx;
       this.visitTime = visitTime;
     }
   }
   
-  // 고객들 서비스 받은 과정 따라 가며 타겟과 모두 일치하는 창구 이용한 고객들 찾아 합산
-  static void countTarget(int recept, int repair){
+  // 고객들 서비스 받은 과정 따라 가며 타겟과 모두 일치하는 창구 이용한 고객들 찾음
+  static void receptAndRepair(){
     for(Customer customer : customers){
       boolean isRecepted = false;
       for(int i = 0; i < n; i++){
         if(receptDesk[i] <= customer.visitTime){
           receptDesk[i] = customer.visitTime + receptTime[i];
-          customer.repairDesk = i;
+          customer.receptDesk = i;
           customer.repairTime = receptDesk[i];
           isRecepted = true;
           break;
@@ -69,14 +66,38 @@ class Solution
     }
 
     Collections.sort(customers, new Comparator<Customer>() {
-
       @Override
-      public int compare(Solution.Customer arg0, Solution.Customer arg1) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'compare'");
+      public int compare(Customer c1, Customer c2) {
+        if(c1.repairTime != c2.repairTime){
+          return c1.repairTime - c2.repairTime;
+        }
+        else{
+          return c1.receptDesk - c2.receptDesk;
+        }
       }
-      
-    });;
+    });
+
+    for(Customer customer : customers){
+      boolean isRepaired = false;
+      for(int i = 0; i < m; i++){
+        if(repairDesk[i] <= customer.repairTime){
+          repairDesk[i] = customer.repairTime + repairTime[i];
+          customer.repairDesk = i;
+          isRepaired = true;
+          break;
+        }
+      }
+      if(!isRepaired){
+        int minIdx = 0;
+        for(int i = 1; i < m; i++){
+          if(repairDesk[minIdx] > repairDesk[i]){
+            minIdx = i;
+          }
+         }
+        repairDesk[minIdx] += repairTime[minIdx];
+        customer.repairDesk = minIdx;
+      }
+    }
   }
 	public static void main(String args[]) throws Exception
 	{
@@ -100,16 +121,27 @@ class Solution
       for (int i = 0; i < n; i++) {
         receptTime[i] = Integer.parseInt(st.nextToken());
       }
+      st = new StringTokenizer(br.readLine());
       for (int i = 0; i < m; i++) {
         repairTime[i] = Integer.parseInt(st.nextToken());
       }
+      st = new StringTokenizer(br.readLine());
       for (int i = 0; i < k; i++) {
         int visitTime = Integer.parseInt(st.nextToken());
-        customers.add(new Customer(visitTime));
+        customers.add(new Customer(i+1, visitTime));
       }
-      targetRecept = new ArrayList<>();
       receptDesk = new int[n];
       repairDesk = new int[m];
+
+      receptAndRepair();
+
+      int ans = 0;
+      for(Customer c: customers){
+        if(c.receptDesk == a && c.repairDesk == b){ ans += c.idx; }
+      }
+      sb.append(ans == 0 ? -1 : ans).append("\n");
     }
+
+    System.out.println(sb.toString());
 	}
 }
